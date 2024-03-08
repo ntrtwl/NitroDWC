@@ -1,1 +1,1 @@
-nitrodwc_prebuilt += cc.find_library('dwcgsserverbrowsing', dirs: meson.current_source_dir() / 'prebuilt')
+nitrodwc_prebuilt += fs.copyfile('prebuilt' / 'libdwcgsserverbrowsing.a')
