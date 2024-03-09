@@ -7,6 +7,8 @@ project('NitroDWC', 'c',
     version: '2.2.30008'
 )
 
+fs = import('fs')
+
 buildtype = get_option('buildtype')
 cc = meson.get_compiler('c')
 
@@ -91,9 +93,8 @@ subdir('libraries')
 ############################################################
 nitrodwc_dep = declare_dependency(
     compile_args: nitrodwc_args,
-    dependencies: nitrodwc_prebuilt,
     include_directories: nitrodwc_includes,
-    link_with: nitrodwc_libs
+    link_with: nitrodwc_libs + nitrodwc_prebuilt
 )
 
 meson.override_dependency('NitroDWC', nitrodwc_dep)
