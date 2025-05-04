@@ -41,6 +41,11 @@ if mwrap_ver != 'default'
     c_args += ['-wrap:ver', mwrap_ver]
 endif
 
+mwrap_sdk = get_option('mwrap_sdk')
+if mwrap_sdk != 'default'
+    c_args += ['-wrap:sdk', mwrap_sdk]
+endif
+
 add_project_arguments(c_args,
     language: 'c',
     native: false
