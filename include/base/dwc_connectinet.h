@@ -2,6 +2,7 @@
 #define DWC_CONNECTINET_H_
 
 #include <ac/dwc_ac.h>
+#include <nitro/wm/common/wm.h>
 
 #ifdef __cplusplus
 extern "C" {

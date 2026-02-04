@@ -1,6 +1,8 @@
 #ifndef DWC_AC_H_
 #define DWC_AC_H_
 
+#include <nitro/types.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
