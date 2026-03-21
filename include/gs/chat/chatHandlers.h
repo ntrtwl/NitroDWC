@@ -1,10 +1,16 @@
 #ifndef _CHATHANDLERS_H_
 #define _CHATHANDLERS_H_
 
+/*************
+** INCLUDES **
+*************/
 #include "chat.h"
 #include "chatSocket.h"
 #include <nonport.h>
 
+/**********
+** TYPES **
+**********/
 typedef struct ciServerMessageType {
     char *command;
     void (*handler)(
@@ -27,9 +33,15 @@ typedef struct ciServerMessageFilter {
     struct ciServerMessageFilter *pnext;
 } ciServerMessageFilter;
 
+/************
+** GLOBALS **
+************/
 extern ciServerMessageType serverMessageTypes[];
 extern int numServerMessageTypes;
 
+/**************
+** FUNCTIONS **
+**************/
 void ciFilterThink(CHAT chat);
 void ciCleanupFilters(CHAT chat);
 

@@ -1,6 +1,9 @@
 #ifndef _CHATMAIN_H_
 #define _CHATMAIN_H_
 
+/*************
+** INCLUDES **
+*************/
 #include "chat.h"
 #include "chatSocket.h"
 #include "chatHandlers.h"
@@ -11,6 +14,9 @@
 #include <stringutil.h>
 #include <md5.h>
 
+/************
+** DEFINES **
+************/
 #define MAX_NICK                 64
 #define MAX_CHAT_NICK            21
 #define MAX_NAME                128
@@ -25,14 +31,17 @@
 #define MAX_AUTHTOKEN           256
 #define MAX_PARTNERCHALLENGE    256
 
-#define CONNECTION    ciConnection * connection; \
-    assert(chat != NULL); \
+#define CONNECTION(line)    ciConnection * connection; \
+    assertWithLine(chat != NULL, line); \
     connection = (ciConnection *)chat;
 
 #define CONNECTED    if (!connection || !connection->connected) return;
 
 #define VALID_NICK_CHARS  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\"#$%&'()*+,-./:;<=>?@[]^_`{|}~"
 
+/**********
+** TYPES **
+**********/
 typedef enum {
     CINoLogin,
     CIUniqueNickLogin,

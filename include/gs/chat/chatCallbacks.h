@@ -1,9 +1,15 @@
 #ifndef _CHATCALLBACKS_H_
 #define _CHATCALLBACKS_H_
 
+/*************
+** INCLUDES **
+*************/
 #include "chat.h"
 #include "chatMain.h"
 
+/************
+** DEFINES **
+************/
 enum {
     CALLBACK_RAW,
     CALLBACK_DISCONNECTED,
@@ -40,6 +46,9 @@ enum {
     CALLBACK_NUM
 };
 
+/**********
+** TYPES **
+**********/
 typedef struct ciCallbackRawParams {
     char *raw;
 } ciCallbackRawParams;
@@ -254,6 +263,9 @@ typedef struct ciCallbackAuthenticateCDKeyParams {
     char *message;
 } ciCallbackAuthenticateCDKeyParams;
 
+/**************
+** FUNCTIONS **
+**************/
 CHATBool ciInitCallbacks(ciConnection *connection);
 void ciCleanupCallbacks(CHAT chat);
 
