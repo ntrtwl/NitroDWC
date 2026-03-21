@@ -20,6 +20,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "gsAssert.h"
+
 #if defined(_XBOX)
     #include <Xtl.h>
 #elif defined(_WIN32)
@@ -519,6 +521,7 @@ char *goastrdup(const char *src);
 #endif
 
 #if defined(_NITRO)
+    #define GSI_DOMAIN_NAME "gs.nintendowifi.net"
     #define AF_INET SO_PF_INET
     #define SOCK_DGRAM SO_SOCK_DGRAM
     #define SOCK_STREAM SO_SOCK_STREAM
@@ -641,6 +644,18 @@ char *goastrdup(const char *src);
 #ifndef max
     #define max(a, b)    (((a) > (b)) ? (a) : (b))
     #define min(a, b)    (((a) < (b)) ? (a) : (b))
+#endif
+
+// GSI Cross Platform Socket Wrapper
+
+// this should all inline and optimize out... I hope
+// if they somehow get really complex, we need to move the implementation into the .c file.
+#if defined _PS3 || defined _PSP
+	#define  gsiSocketIsError(theReturnValue)		((theReturnValue) <  0)
+	#define  gsiSocketIsNotError(theReturnValue)	((theReturnValue) >= 0)
+#else
+	#define  gsiSocketIsError(theReturnValue)		((theReturnValue) == -1)
+	#define  gsiSocketIsNotError(theReturnValue)	((theReturnValue) != -1)
 #endif
 
 int SetSockBlocking(SOCKET sock, int isblocking);
