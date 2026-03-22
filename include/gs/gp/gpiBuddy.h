@@ -1,11 +1,17 @@
 #ifndef _GPIBUDDY_H_
 #define _GPIBUDDY_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//DEFINES
+/////////
+// Types of bm's.
+/////////////////
 #define GPI_BM_MESSAGE                    1
 #define GPI_BM_REQUEST                    2
-#define GPI_BM_REPLY                      3
+#define GPI_BM_REPLY                      3  // only used on the backend
 #define GPI_BM_STATUS                   100
 #define GPI_BM_INVITE                   101
 #define GPI_BM_PING                     102
@@ -20,6 +26,8 @@
 #define GPI_BM_FILE_TRANSFER_CANCEL     207
 #define GPI_BM_FILE_TRANSFER_KEEPALIVE  208
 
+//FUNCTIONS
+///////////
 GPResult gpiProcessRecvBuddyMessage(GPConnection *connection, const char *input);
 GPResult gpiSendServerBuddyMessage(GPConnection *connection, int profileid, int type, const char *message);
 GPResult gpiSendBuddyMessage(GPConnection *connection, int profileid, int type, const char *message);

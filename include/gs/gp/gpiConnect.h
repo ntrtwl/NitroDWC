@@ -1,14 +1,22 @@
 #ifndef _GPICONNECT_H_
 #define _GPICONNECT_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//DEFINES
+/////////
+// Connect States.
+//////////////////
 #define GPI_NOT_CONNECTED              0
 #define GPI_CONNECTING                 1
 #define GPI_NEGOTIATING                2
 #define GPI_CONNECTED                  3
 #define GPI_DISCONNECTED               4
 
+//FUNCTIONS
+///////////
 GPResult gpiConnect(
     GPConnection *connection,
     const char nick[GP_NICK_LEN],

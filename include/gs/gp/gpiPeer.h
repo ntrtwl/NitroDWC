@@ -1,8 +1,14 @@
 #ifndef _GPIPEER_H_
 #define _GPIPEER_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//DEFINES
+/////////
+// Peer states.
+///////////////
 #define GPI_PEER_NOT_CONNECTED       100
 #define GPI_PEER_GETTING_SIG         101
 #define GPI_PEER_GOT_SIG             102
@@ -11,16 +17,24 @@
 #define GPI_PEER_CONNECTED           105
 #define GPI_PEER_DISCONNECTED        106
 
+// Timeout for a peer connection, in milliseconds.
+/////////////////////////////////////////////
 #define GPI_PEER_TIMEOUT    (5 * 60)
 
 typedef struct GPITransferID_s *GPITransferID_st;
 
+//TYPES
+///////
+// A peer message.
+//////////////////
 typedef struct GPIMessage {
     GPIBuffer buffer;
     int type;
     int start;
 } GPIMessage;
 
+// A peer connection.
+/////////////////////
 typedef struct GPIPeer_s {
     int state;
     GPIBool initiated;
@@ -34,6 +48,8 @@ typedef struct GPIPeer_s {
     struct GPIPeer_s *pnext;
 } GPIPeer;
 
+//FUNCTIONS
+///////////
 GPResult gpiProcessPeers(GPConnection *connection);
 
 GPResult gpiPeerGetSig(

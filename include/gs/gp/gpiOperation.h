@@ -1,21 +1,33 @@
 #ifndef _GPIOPERATION_H_
 #define _GPIOPERATION_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//DEFINES
+/////////
+// Operation Types.
+///////////////////
 #define GPI_CONNECT                    0
 #define GPI_NEW_PROFILE                1
 #define GPI_GET_INFO                   2
 #define GPI_PROFILE_SEARCH             3
 #define GPI_REGISTER_UNIQUENICK        4
 
+// Operation States.
+////////////////////
 #define GPI_START                      0
-
+//#define GPI_CONNECTING               1
 #define GPI_LOGIN                      2
 #define GPI_REQUESTING                 3
 #define GPI_WAITING                    4
 #define GPI_FINISHING                  5
 
+//TYPES
+///////
+// Operation data.
+//////////////////
 typedef struct GPIOperation_s {
     int type;
     void *data;
@@ -27,6 +39,8 @@ typedef struct GPIOperation_s {
     struct GPIOperation_s *pnext;
 } GPIOperation;
 
+// Connect operation data.
+//////////////////////////
 typedef struct {
     char serverChallenge[128];
     char userChallenge[33];
@@ -37,6 +51,8 @@ typedef struct {
     GPIBool newuser;
 } GPIConnectData;
 
+//FUNCTIONS
+///////////
 GPResult gpiAddOperation(
     GPConnection *connection,
     int type,

@@ -1,8 +1,14 @@
 #ifndef _GPIINFO_H_
 #define _GPIINFO_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//TYPES
+///////
+// Profile info cache.
+//////////////////////
 typedef struct {
     char *nick;
     char *uniquenick;
@@ -13,9 +19,9 @@ typedef struct {
     int icquin;
     char zipcode[GP_ZIPCODE_LEN];
     char countrycode[GP_COUNTRYCODE_LEN];
-    float longitude;
-    float latitude;
-    char place[GP_PLACE_LEN];
+    float longitude; // negative is west, positive is east.  (0, 0) means unknown.
+    float latitude;  // negative is south, positive is north.  (0, 0) means unknown.
+    char place[GP_PLACE_LEN];  // e.g., "USA|California|Irvine", "South Korea|Seoul", "Turkey"
     int birthday;
     int birthmonth;
     int birthyear;
@@ -33,6 +39,8 @@ typedef struct {
     int conntypeid;
 } GPIInfoCache;
 
+//FUNCTIONS
+///////////
 GPResult gpiSetInfoi(
     GPConnection *connection,
     GPEnum info,

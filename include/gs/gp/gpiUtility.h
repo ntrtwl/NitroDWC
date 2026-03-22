@@ -1,10 +1,18 @@
 #ifndef _GPIUTILITY_H_
 #define _GPIUTILITY_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//DEFINES
+/////////
+// Buffer read size.
+////////////////////
 #define GPI_READ_SIZE    (2 * 1024)
 
+//MACROS
+////////
 #define freeclear(mem)                                              \
     {                                                               \
         gsifree(mem);                                               \
@@ -39,10 +47,12 @@
         }                                                           \
     }
 
+//FUNCTIONS
+///////////
 void strzcpy(
     char *dest,
     const char *src,
-    size_t len
+    size_t len  // length of buffer, including space for '\0'
 );
 
 void UTF8ToUCS2StringLen(
