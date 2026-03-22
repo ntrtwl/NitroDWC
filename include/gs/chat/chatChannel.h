@@ -1,8 +1,18 @@
 #ifndef _CHATCHANNEL_H_
 #define _CHATCHANNEL_H_
 
+/*************
+** INCLUDES **
+*************/
 #include "chat.h"
 
+/************
+** DEFINES **
+************/
+
+/**************
+** FUNCTIONS **
+**************/
 CHATBool ciInitChannels(ciConnection *connection);
 void ciCleanupChannels(CHAT chat);
 
@@ -172,6 +182,9 @@ void ciSetUserBasicInfo(
 
 void ciClearAllUsers(CHAT chat);
 
+// Because these return pointers to SDK memory, we must have a widestring version
+// so we can return a pointer to widestring data
+// DO NOT CHANGE nick to an unsigned short*, nicks are internally store as char*
 CHATBool ciGetUserBasicInfoA(
     CHAT chat,
     const char *nick,

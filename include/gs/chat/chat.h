@@ -7,21 +7,34 @@
 extern "C" {
 #endif
 
+/************
+** DEFINES **
+************/
+// User and channel message types.
+//////////////////////////////////
 #define CHAT_MESSAGE               0
 #define CHAT_ACTION                1
 #define CHAT_NOTICE                2
 #define CHAT_UTM                   3
 #define CHAT_ATM                   4
 
+// User modes.
+// PANTS|03.12.01 - These are now bitflags!
+// Both CHAT_VOICE and CHAT_OP can be set at the same time.
+///////////////////////////////////////////////////////////
 #define CHAT_NORMAL                0
 #define CHAT_VOICE                 1
 #define CHAT_OP                    2
 
-#define CHAT_LEFT                  0
-#define CHAT_QUIT                  1
-#define CHAT_KICKED                2
-#define CHAT_KILLED                3
+// Part reasons (see the chatUserParted callback).
+//////////////////////////////////////////////////
+#define CHAT_LEFT                  0  // The user left the channel.
+#define CHAT_QUIT                  1  // The user quit the chat network.
+#define CHAT_KICKED                2  // The user was kicked from the channel.
+#define CHAT_KILLED                3  // The user was kicked off the chat network.
 
+// Possible nick errors while connecting.
+/////////////////////////////////////////
 #define CHAT_NICK_OK               0
 #define CHAT_IN_USE                1
 #define CHAT_INVALID               2
@@ -30,17 +43,28 @@ extern "C" {
 #define CHAT_INVALID_UNIQUENICK    5
 #define CHAT_NICK_TOO_LONG         6
 
+// Reasons why a connect attempt could fail.
+////////////////////////////////////////////
 #define CHAT_DISCONNECTED          0
 #define CHAT_NICK_ERROR            1
 #define CHAT_LOGIN_FAILED          2
 
+/**********
+** TYPES **
+**********/
+// Boolean type.
+////////////////
 typedef enum {
     CHATFalse,
     CHATTrue
 } CHATBool;
 
+// A CHAT object represents a client connection to a chat server.
+/////////////////////////////////////////////////////////////////
 typedef void *CHAT;
 
+// Object representing a channel's mode.
+////////////////////////////////////////
 typedef struct CHATChannelMode {
     CHATBool InviteOnly;
     CHATBool Private;
@@ -52,18 +76,24 @@ typedef struct CHATChannelMode {
     int Limit;
 } CHATChannelMode;
 
+// The result of a channel enter attempt,
+// passed into the chatEnterChannelCallback().
+//////////////////////////////////////////////
 typedef enum {
-    CHATEnterSuccess,
-    CHATBadChannelName,
-    CHATChannelIsFull,
-    CHATInviteOnlyChannel,
-    CHATBannedFromChannel,
-    CHATBadChannelPassword,
-    CHATTooManyChannels,
-    CHATEnterTimedOut,
-    CHATBadChannelMask
+    CHATEnterSuccess,        // The channel was successfully entered.
+    CHATBadChannelName,      // The channel name was invalid.
+    CHATChannelIsFull,       // The channel is at its user limit.
+    CHATInviteOnlyChannel,   // The channel is invite only.
+    CHATBannedFromChannel,   // The local user is banned from this channel.
+    CHATBadChannelPassword,  // The channel has a password, and a bad password (or none) was given.
+    CHATTooManyChannels,     // The server won't allow this user in any more channels.
+    CHATEnterTimedOut,       // The attempt to enter timed out.
+    CHATBadChannelMask       // Not sure if any servers use this, or what it means! (ERR_BADCHANMASK)
 } CHATEnterResult;
 
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 #ifndef GSI_UNICODE
     #define chatConnect                    chatConnectA
     #define chatConnectSpecial             chatConnectSpecialA
@@ -160,26 +190,41 @@ typedef enum {
     #define chatGetNick                    chatGetNickW
 #endif
 
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/**********************
+** GLOBALS CALLBACKS **
+**********************/
+// Gets raw incoming network traffic.
+/////////////////////////////////////
 typedef void (*chatRaw)(
     CHAT chat,
     const gsi_char *raw,
     void *param
 );
 
+// Called when the client has been disconnected.
+////////////////////////////////////////////////
 typedef void (*chatDisconnected)(
     CHAT chat,
     const gsi_char *reason,
     void *param
 );
 
+// Called when a private message from another user is received.
+// If user==NULL, this is a message from the server.
+///////////////////////////////////////////////////////////////
 typedef void (*chatPrivateMessage)(
     CHAT chat,
     const gsi_char *user,
     const gsi_char *message,
-    int type,
+    int type,  // See defined message types above.
     void *param
 );
 
+// Called when invited into a channel.
+//////////////////////////////////////
 typedef void (*chatInvited)(
     CHAT chat,
     const gsi_char *channel,
@@ -187,6 +232,8 @@ typedef void (*chatInvited)(
     void *param
 );
 
+// A connection's global callbacks.
+///////////////////////////////////
 typedef struct chatGlobalCallbacks {
     chatRaw raw;
     chatDisconnected disconnected;
@@ -195,15 +242,22 @@ typedef struct chatGlobalCallbacks {
     void *param;
 } chatGlobalCallbacks;
 
+/**********************
+** CHANNEL CALLBACKS **
+**********************/
+// Called when a message is received in a channel.
+//////////////////////////////////////////////////
 typedef void (*chatChannelMessage)(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *user,
     const gsi_char *message,
-    int type,
+    int type,  // See defined message types above.
     void *param
 );
 
+// Called when the local client is kicked from a channel.
+/////////////////////////////////////////////////////////
 typedef void (*chatKicked)(
     CHAT chat,
     const gsi_char *channel,
@@ -212,24 +266,30 @@ typedef void (*chatKicked)(
     void *param
 );
 
+// Called when a user joins a channel we're in.
+///////////////////////////////////////////////
 typedef void (*chatUserJoined)(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *user,
-    int mode,
+    int mode,    // See defined user modes above.
     void *param
 );
 
+// Called when a user parts a channel we're in.
+///////////////////////////////////////////////
 typedef void (*chatUserParted)(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *user,
-    int why,
+    int why,    // See defined part reasons above.
     const gsi_char *reason,
     const gsi_char *kicker,
     void *param
 );
 
+// Called when a user in a channel we're in changes nicks.
+//////////////////////////////////////////////////////////
 typedef void (*chatUserChangedNick)(
     CHAT chat,
     const gsi_char *channel,
@@ -238,6 +298,8 @@ typedef void (*chatUserChangedNick)(
     void *param
 );
 
+// Called when the topic changes in a channel we're in.
+///////////////////////////////////////////////////////
 typedef void (*chatTopicChanged)(
     CHAT chat,
     const gsi_char *channel,
@@ -245,6 +307,8 @@ typedef void (*chatTopicChanged)(
     void *param
 );
 
+// Called when the mode changes in a channel we're in.
+//////////////////////////////////////////////////////
 typedef void (*chatChannelModeChanged)(
     CHAT chat,
     const gsi_char *channel,
@@ -252,20 +316,26 @@ typedef void (*chatChannelModeChanged)(
     void *param
 );
 
+// Called when a user's mode changes in a channel we're in.
+///////////////////////////////////////////////////////////
 typedef void (*chatUserModeChanged)(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *user,
-    int mode,
+    int mode,  // See defined user modes above.
     void *param
 );
 
+// Called when the user list changes (due to a join or a part) in a channel we're in.
+/////////////////////////////////////////////////////////////////////////////////////
 typedef void (*chatUserListUpdated)(
     CHAT chat,
     const gsi_char *channel,
     void *param
 );
 
+// Called when the chat server sends an entire new user list for a channel we're in.
+////////////////////////////////////////////////////////////////////////////////////
 typedef void (*chatNewUserList)(
     CHAT chat,
     const gsi_char *channel,
@@ -275,6 +345,8 @@ typedef void (*chatNewUserList)(
     void *param
 );
 
+// Called when a user changes a broadcast key in a channel we're in.
+////////////////////////////////////////////////////////////////////
 typedef void (*chatBroadcastKeyChanged)(
     CHAT chat,
     const gsi_char *channel,
@@ -284,6 +356,8 @@ typedef void (*chatBroadcastKeyChanged)(
     void *param
 );
 
+// A channel's callbacks.
+/////////////////////////
 typedef struct chatChannelCallbacks {
     chatChannelMessage channelMessage;
     chatKicked kicked;
@@ -299,16 +373,27 @@ typedef struct chatChannelCallbacks {
     void *param;
 } chatChannelCallbacks;
 
+/************
+** GENERAL **
+************/
+// Called when a connect attempt completes.
+// failureReason is only set if success is CHATFalse.
+/////////////////////////////////////////////////////
 typedef void (*chatConnectCallback)(
     CHAT chat,
     CHATBool success,
-    int failureReason,
+    int failureReason,  // CHAT_DISCONNECTED, CHAT_NICK_ERROR, etc.
     void *param
 );
 
+// Called if there is an error with the nick while connecting.
+// To retry with a new nick, call chatRetryWithNick.
+// Otherwise, call chatDisconnect to stop the connection.
+// Suggested nicks are only provided if type is CHAT_INVALID_UNIQUENICK.
+////////////////////////////////////////////////////////////////////////
 typedef void (*chatNickErrorCallback)(
     CHAT chat,
-    int type,
+    int type,  // CHAT_IN_USE, CHAT_INVALID, etc.
     const gsi_char *nick,
     int numSuggestedNicks,
     const gsi_char **suggestedNicks,
@@ -317,11 +402,13 @@ typedef void (*chatNickErrorCallback)(
 
 typedef void (*chatFillInUserCallback)(
     CHAT chat,
-    unsigned int IP,
+    unsigned int IP, // PANTS|08.21.00 - changed from unsigned long
     gsi_char user[128],
     void *param
 );
 
+// Connects you to a chat server and returns a CHAT object.
+///////////////////////////////////////////////////////////
 CHAT chatConnect(
     const gsi_char *serverAddress,
     int port,
@@ -398,11 +485,23 @@ CHAT chatConnectPreAuth(
     CHATBool blocking
 );
 
+// If the chatNickErrorCallback gets called, then this can be called
+// with a new nick to retry.  If this isn't called, the connection can be
+// disconnected with chatDisconnect.  If the new nick is successful, then
+// the chatConnectCallback will get called.  If there's another nick 
+// error, the chatNickErrorCallback will get called again.
+/////////////////////////////////////////////////////////////////////////
 void chatRetryWithNick(
     CHAT chat,
     const gsi_char *nick
 );
 
+// Register a uniquenick.
+// Should be called in response to the chatNickErrorCallback being called
+// with a type of CHAT_UNIQUENICK_EXPIRED or CHAT_NO_UNIQUENICK.
+// If the uniquenick cannot be registered, the chatNickErrorCallback will
+// be called again with a type of CHAT_IN_USE or CHAT_INVALID.
+/////////////////////////////////////////////////////////////////////////
 void chatRegisterUniqueNick(
     CHAT chat,
     int namespaceID,
@@ -410,14 +509,23 @@ void chatRegisterUniqueNick(
     const gsi_char *cdkey
 );
 
+// Disconnect the chat connection.
+//////////////////////////////////
 void chatDisconnect(CHAT chat);
+
+// Processes the chat connection.
+/////////////////////////////////
 void chatThink(CHAT chat);
 
+// Sends raw data, without any interpretation.
+//////////////////////////////////////////////
 void chatSendRaw(
     CHAT chat,
     const gsi_char *command
 );
 
+// Called as a result of a nick change attempt.
+///////////////////////////////////////////////
 typedef void (*chatChangeNickCallback)(
     CHAT chat,
     CHATBool success,
@@ -426,6 +534,8 @@ typedef void (*chatChangeNickCallback)(
     void *param
 );
 
+// Change the local user's nick.
+////////////////////////////////
 void chatChangeNick(
     CHAT chat,
     const gsi_char *newNick,
@@ -434,24 +544,43 @@ void chatChangeNick(
     CHATBool blocking
 );
 
+// Get our local nickname.
+//////////////////////////
 const gsi_char *chatGetNick(CHAT chat);
+
+// Copies the oldNick to the newNick, replacing any invalid characters with legal ones.
+///////////////////////////////////////////////////////////////////////////////////////
 void chatFixNick(
     gsi_char *newNick,
     const gsi_char *oldNick
 );
+
+// Removes the namespace extension from a chat nick.
+////////////////////////////////////////////////////
 const gsi_char *chatTranslateNick(
     gsi_char *nick,
     const gsi_char *extension
 );
 
+// Gets the local userID.
+// Only valid if connected with chatConnectLogin or chatConnectPreAuth.
+///////////////////////////////////////////////////////////////////////
 int chatGetUserID(CHAT chat);
+
+// Gets the local profileID.
+// Only valid if connected with chatConnectLogin or chatConnectPreAuth.
+///////////////////////////////////////////////////////////////////////
 int chatGetProfileID(CHAT chat);
 
+// Turn on/off quiet mode.
+//////////////////////////
 void chatSetQuietMode(
     CHAT chat,
     CHATBool quiet
 );
 
+// Called as a result of an authenticate CD key attempt.
+////////////////////////////////////////////////////////
 typedef void (*chatAuthenticateCDKeyCallback)(
     CHAT chat,
     int result,
@@ -459,6 +588,8 @@ typedef void (*chatAuthenticateCDKeyCallback)(
     void *param
 );
 
+// Attempts to authenticates a CD key.
+//////////////////////////////////////
 void chatAuthenticateCDKey(
     CHAT chat,
     const gsi_char *cdkey,
@@ -467,6 +598,11 @@ void chatAuthenticateCDKey(
     CHATBool blocking
 );
 
+/*************
+** CHANNELS **
+*************/
+// Gets called for each channel enumerated.
+///////////////////////////////////////////
 typedef void (*chatEnumChannelsCallbackEach)(
     CHAT chat,
     CHATBool success,
@@ -477,6 +613,8 @@ typedef void (*chatEnumChannelsCallbackEach)(
     void *param
 );
 
+// Gets called after all channels have been enumerated.
+///////////////////////////////////////////////////////
 typedef void (*chatEnumChannelsCallbackAll)(
     CHAT chat,
     CHATBool success,
@@ -487,6 +625,8 @@ typedef void (*chatEnumChannelsCallbackAll)(
     void *param
 );
 
+// Enumerates the channels available on a chat server.
+//////////////////////////////////////////////////////
 void chatEnumChannels(
     CHAT chat,
     const gsi_char *filter,
@@ -496,6 +636,8 @@ void chatEnumChannels(
     CHATBool blocking
 );
 
+// Gets called for each channel enumerated.
+///////////////////////////////////////////
 typedef void (*chatEnumJoinedChannelsCallback)(
     CHAT chat,
     int index,
@@ -503,12 +645,17 @@ typedef void (*chatEnumJoinedChannelsCallback)(
     void *param
 );
 
+// Enumerates the channels that we are joined to
+//////////////////////////////////////////////////////
 void chatEnumJoinedChannels(
     CHAT chat,
     chatEnumJoinedChannelsCallback callback,
     void *param
 );
 
+
+// Gets called when a channel has been entered.
+///////////////////////////////////////////////
 typedef void (*chatEnterChannelCallback)(
     CHAT chat,
     CHATBool success,
@@ -517,6 +664,8 @@ typedef void (*chatEnterChannelCallback)(
     void *param
 );
 
+// Enters a channel.
+////////////////////
 void chatEnterChannel(
     CHAT chat,
     const gsi_char *channel,
@@ -527,12 +676,16 @@ void chatEnterChannel(
     CHATBool blocking
 );
 
+// Leaves a channel.
+////////////////////
 void chatLeaveChannel(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *reason
-);
+);  // PANTS|03.13.01
 
+// Sends a message to a channel.
+////////////////////////////////
 void chatSendChannelMessage(
     CHAT chat,
     const gsi_char *channel,
@@ -540,12 +693,16 @@ void chatSendChannelMessage(
     int type
 );
 
+// Sets the topic in a channel.
+///////////////////////////////
 void chatSetChannelTopic(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *topic
 );
 
+// Gets called when a channel's topic has been retrieved.
+/////////////////////////////////////////////////////////
 typedef void (*chatGetChannelTopicCallback)(
     CHAT chat,
     CHATBool success,
@@ -554,6 +711,8 @@ typedef void (*chatGetChannelTopicCallback)(
     void *param
 );
 
+// Gets a channel's topic.
+//////////////////////////
 void chatGetChannelTopic(
     CHAT chat,
     const gsi_char *channel,
@@ -562,12 +721,16 @@ void chatGetChannelTopic(
     CHATBool blocking
 );
 
+// Sets a channel's mode.
+/////////////////////////
 void chatSetChannelMode(
     CHAT chat,
     const gsi_char *channel,
     CHATChannelMode *mode
 );
 
+// Gets called when a channel's mode has been retrieved.
+////////////////////////////////////////////////////////
 typedef void (*chatGetChannelModeCallback)(
     CHAT chat,
     CHATBool success,
@@ -576,6 +739,8 @@ typedef void (*chatGetChannelModeCallback)(
     void *param
 );
 
+// Gets a channel's mode.
+/////////////////////////
 void chatGetChannelMode(
     CHAT chat,
     const gsi_char *channel,
@@ -584,6 +749,8 @@ void chatGetChannelMode(
     CHATBool blocking
 );
 
+// Sets the password in a channel.
+//////////////////////////////////
 void chatSetChannelPassword(
     CHAT chat,
     const gsi_char *channel,
@@ -591,6 +758,8 @@ void chatSetChannelPassword(
     const gsi_char *password
 );
 
+// Called when the channel's password has been retrieved.
+/////////////////////////////////////////////////////////
 typedef void (*chatGetChannelPasswordCallback)(
     CHAT chat,
     CHATBool success,
@@ -600,6 +769,8 @@ typedef void (*chatGetChannelPasswordCallback)(
     void *param
 );
 
+// Gets the password in a channel.
+//////////////////////////////////
 void chatGetChannelPassword(
     CHAT chat,
     const gsi_char *channel,
@@ -608,12 +779,16 @@ void chatGetChannelPassword(
     CHATBool blocking
 );
 
+// Set the maximum number of users allowed in a channel.
+////////////////////////////////////////////////////////
 void chatSetChannelLimit(
     CHAT chat,
     const gsi_char *channel,
     int limit
 );
 
+// Called with the list of bans in a channel.
+/////////////////////////////////////////////
 typedef void (*chatEnumChannelBansCallback)(
     CHAT chat,
     CHATBool success,
@@ -623,6 +798,8 @@ typedef void (*chatEnumChannelBansCallback)(
     void *param
 );
 
+// Enumerate through the bans in a channel.
+///////////////////////////////////////////
 void chatEnumChannelBans(
     CHAT chat,
     const gsi_char *channel,
@@ -631,34 +808,51 @@ void chatEnumChannelBans(
     CHATBool blocking
 );
 
+// Adds a channel ban.
+//////////////////////
 void chatAddChannelBan(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *ban
 );
 
+// Removes a ban string from a channel.
+///////////////////////////////////////
 void chatRemoveChannelBan(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *ban
 );
 
+// Set the group this channel is a part of.
+///////////////////////////////////////////
 void chatSetChannelGroup(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *group
 );
 
+// Get the number of users in the channel.
+// Returns -1 if we are not in the channel.
+///////////////////////////////////////////
 int chatGetChannelNumUsers(
     CHAT chat,
     const gsi_char *channel
 );
 
+
+// Returns CHATTrue if we are in the channel
+///////////////////////////////////////////
 CHATBool chatInChannel(
     CHAT chat,
     const gsi_char *channel
 );
 
+/**********
+** USERS **
+**********/
+// Called with the list of users in a channel.
+//////////////////////////////////////////////
 typedef void (*chatEnumUsersCallback)(
     CHAT chat,
     CHATBool success,
@@ -669,6 +863,8 @@ typedef void (*chatEnumUsersCallback)(
     void *param
 );
 
+// Enumerate through the users in a channel.
+////////////////////////////////////////////
 void chatEnumUsers(
     CHAT chat,
     const gsi_char *channel,
@@ -677,6 +873,8 @@ void chatEnumUsers(
     CHATBool blocking
 );
 
+// Send a private message to a user.
+////////////////////////////////////
 void chatSendUserMessage(
     CHAT chat,
     const gsi_char *user,
@@ -684,6 +882,8 @@ void chatSendUserMessage(
     int type
 );
 
+// Called with a user's info.
+/////////////////////////////
 typedef void (*chatGetUserInfoCallback)(
     CHAT chat,
     CHATBool success,
@@ -696,6 +896,8 @@ typedef void (*chatGetUserInfoCallback)(
     void *param
 );
 
+// Get a user's info.
+/////////////////////
 void chatGetUserInfo(
     CHAT chat,
     const gsi_char *user,
@@ -704,6 +906,8 @@ void chatGetUserInfo(
     CHATBool blocking
 );
 
+// Called with a user's basic info.
+///////////////////////////////////
 typedef void (*chatGetBasicUserInfoCallback)(
     CHAT chat,
     CHATBool success,
@@ -713,6 +917,9 @@ typedef void (*chatGetBasicUserInfoCallback)(
     void *param
 );
 
+// Get some basic info on the user.
+// PANTS|12.08.2000
+///////////////////////////////////
 void chatGetBasicUserInfo(
     CHAT chat,
     const gsi_char *user,
@@ -721,6 +928,9 @@ void chatGetBasicUserInfo(
     CHATBool blocking
 );
 
+// Get basic info without waiting.
+// Returns CHATFalse if the info isn't available.
+/////////////////////////////////////////////////
 CHATBool chatGetBasicUserInfoNoWait(
     CHAT chat,
     const gsi_char *nick,
@@ -728,6 +938,9 @@ CHATBool chatGetBasicUserInfoNoWait(
     const gsi_char **address
 );
 
+// Called with a user's basic info for everyone in a channel.
+// Called with a NULL nick/user/address at the end.
+/////////////////////////////////////////////////////////////
 typedef void (*chatGetChannelBasicUserInfoCallback)(
     CHAT chat,
     CHATBool success,
@@ -738,6 +951,9 @@ typedef void (*chatGetChannelBasicUserInfoCallback)(
     void *param
 );
 
+// Get basic info on all the users in a channel.
+// PANTS|12.19.00
+////////////////////////////////////////////////
 void chatGetChannelBasicUserInfo(
     CHAT chat,
     const gsi_char *channel,
@@ -746,12 +962,16 @@ void chatGetChannelBasicUserInfo(
     CHATBool blocking
 );
 
+// Invite a user into a channel.
+////////////////////////////////
 void chatInviteUser(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *user
 );
 
+// Kick a user from a channel.
+//////////////////////////////
 void chatKickUser(
     CHAT chat,
     const gsi_char *channel,
@@ -759,12 +979,16 @@ void chatKickUser(
     const gsi_char *reason
 );
 
+// Ban a user from a channel.
+/////////////////////////////
 void chatBanUser(
     CHAT chat,
     const gsi_char *channel,
     const gsi_char *user
 );
 
+// Sets a user's mode in a channel.
+///////////////////////////////////
 void chatSetUserMode(
     CHAT chat,
     const gsi_char *channel,
@@ -772,6 +996,8 @@ void chatSetUserMode(
     int mode
 );
 
+// Called with the user's mode.
+///////////////////////////////
 typedef void (*chatGetUserModeCallback)(
     CHAT chat,
     CHATBool success,
@@ -781,6 +1007,8 @@ typedef void (*chatGetUserModeCallback)(
     void *param
 );
 
+// Gets a user's mode in a channel.
+///////////////////////////////////
 void chatGetUserMode(
     CHAT chat,
     const gsi_char *channel,
@@ -790,6 +1018,8 @@ void chatGetUserMode(
     CHATBool blocking
 );
 
+// Gets a user's mode in a channel.
+///////////////////////////////////
 CHATBool chatGetUserModeNoWait(
     CHAT chat,
     const gsi_char *channel,
@@ -797,6 +1027,12 @@ CHATBool chatGetUserModeNoWait(
     int *mode
 );
 
+/*********
+** KEYS **
+*********/
+// Sets global key/values for the local user.
+// Set a value to NULL or "" to clear that key.
+///////////////////////////////////////////////
 void chatSetGlobalKeys(
     CHAT chat,
     int num,
@@ -804,6 +1040,10 @@ void chatSetGlobalKeys(
     const gsi_char **values
 );
 
+// Called with a user's global key/values.
+// If used for a set of users, will be
+// called with user==NULL when done.
+//////////////////////////////////////////
 typedef void (*chatGetGlobalKeysCallback)(
     CHAT chat,
     CHATBool success,
@@ -814,6 +1054,11 @@ typedef void (*chatGetGlobalKeysCallback)(
     void *param
 );
 
+// Gets global key/values for a user or users.
+// To get the global key/values for one user, pass in that
+// user's nick as the target.  To get the global key/values
+// for every user in a channel, use the channel name as the target.
+///////////////////////////////////////////////////////////////////
 void chatGetGlobalKeys(
     CHAT chat,
     const gsi_char *target,
@@ -824,6 +1069,12 @@ void chatGetGlobalKeys(
     CHATBool blocking
 );
 
+// Sets channel key/values.
+// If user is NULL or "", the keys will be set on the channel.
+// Otherwise, they will be set on the user,
+// Only ops can set channel keys on other users.
+// Set a value to NULL or "" to clear that key.
+//////////////////////////////////////////////////////////////
 void chatSetChannelKeys(
     CHAT chat,
     const gsi_char *channel,
@@ -833,6 +1084,10 @@ void chatSetChannelKeys(
     const gsi_char **values
 );
 
+// Called with a user's channel key/values, or a channel's key/values.
+// If used for a set of users, will be called with user==NULL when done.
+// If used for a channel, will be called once with user==NULL.
+////////////////////////////////////////////////////////////////////////
 typedef void (*chatGetChannelKeysCallback)(
     CHAT chat,
     CHATBool success,
@@ -844,6 +1099,11 @@ typedef void (*chatGetChannelKeysCallback)(
     void *param
 );
 
+// Gets channel key/values for a user or users, or for a channel.
+// To get the channel key/values for every user in
+// a channel, pass in "*" as the user.  To get the keys for a channel,
+// pass in NULL or "".
+//////////////////////////////////////////////////////////////////////
 void chatGetChannelKeys(
     CHAT chat,
     const gsi_char *channel,
@@ -855,6 +1115,9 @@ void chatGetChannelKeys(
     CHATBool blocking
 );
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+// This ASCII versions must be available even when GSI_UNICODE is defined
 #ifdef GSI_UNICODE
     CHATBool chatGetBasicUserInfoNoWaitA(
         CHAT chat,

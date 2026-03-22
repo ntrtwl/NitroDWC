@@ -1,6 +1,9 @@
 #ifndef _CHATSOCKET_H_
 #define _CHATSOCKET_H_
 
+/*************
+** INCLUDES **
+*************/
 #include <stdio.h>
 
 #include "chat.h"
@@ -8,6 +11,9 @@
 
 #include <nonport.h>
 
+/**********
+** ENUMS **
+**********/
 typedef enum ciConnectState {
     ciNotConnected,
     ciConnected,
@@ -48,6 +54,9 @@ typedef struct ciSocket {
 #endif
 } ciSocket;
 
+/**************
+** FUNCTIONS **
+**************/
 CHATBool ciSocketInit(ciSocket * sock, const char * nick);
 CHATBool ciSocketConnect(ciSocket * sock, const char * serverAddress, int port);
 void ciSocketDisconnect(ciSocket * sock);
