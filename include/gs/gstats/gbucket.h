@@ -27,7 +27,7 @@ void *BucketConcat(bucketset_t set, char *name, void *value);
 void *BucketAvg(bucketset_t set, char *name, void *value);
 void *BucketGet(bucketset_t set, char *name);
 
-
+/* Helper functions */
 void *bint(int i);
 void *bfloat(double f);
 
