@@ -8,68 +8,99 @@ extern "C" {
 #include "ghttp.h"
 #include "ghttpConnection.h"
 
+// HTTP Line-terminator.
+////////////////////////
 #define CRLF    "\xD\xA"
 
+// Default HTTP port.
+/////////////////////
 #define GHI_DEFAULT_PORT                      80
 #define GHI_DEFAULT_SECURE_PORT               443
 #define GHI_DEFAULT_THROTTLE_BUFFER_SIZE      125
 #define GHI_DEFAULT_THROTTLE_TIME_DELAY       250
 
+// Proxy server.
+////////////////
 extern char *ghiProxyAddress;
 extern unsigned short ghiProxyPort;
 
+// Throttle settings.
+/////////////////////
 extern int ghiThrottleBufferSize;
 extern gsi_time ghiThrottleTimeDelay;
 
+// Our thread lock.
+///////////////////
 void ghiCreateLock(void);
 void ghiFreeLock(void);
 void ghiLock(void);
 void ghiUnlock(void);
 
+// Do logging.
+//////////////
 #ifdef HTTP_LOG
     void ghiLog(char *buffer, int len);
 #else
     #define ghiLog(b, c)
 #endif
 
+// Possible results from ghiDoReceive.
+//////////////////////////////////////
 typedef enum {
-    GHIRecvData,
-    GHINoData,
-    GHIConnClosed,
-    GHIError
+    GHIRecvData,         // Data was received.
+    GHINoData,           // No data was available.
+    GHIConnClosed,       // The connection was closed.
+    GHIError             // There was a socket error.
 } GHIRecvResult;
 
+// Receive some data.
+/////////////////////
 GHIRecvResult ghiDoReceive(
     GHIConnection *connection,
     char buffer[],
     int *bufferLen
 );
 
+// Do a send on the connection's socket.
+// Returns number of bytes sent (0 or more).
+// If error, returns  (-1).
+////////////////////////////////////////////
 int ghiDoSend(
     GHIConnection *connection,
     const char *buffer,
     int len
 );
 
+// Results for ghtTrySendThenBuffer.
+////////////////////////////////////
 typedef enum {
-    GHITrySendError,
-    GHITrySendSent,
-    GHITrySendBuffered
+    GHITrySendError,     // There was an error sending.
+    GHITrySendSent,      // Everything was sent.
+    GHITrySendBuffered   // Some or all of the data was buffered.
 } GHITrySendResult;
 
+// Sends whatever it can on the socket.
+// Buffers whatever can't be sent in the sendBuffer.
+////////////////////////////////////////////////////
 GHITrySendResult ghiTrySendThenBuffer(
     GHIConnection *connection,
     const char *buffer,
     int len
 );
 
+// Set the proxy server
+////////////////////////
 GHTTPBool ghiSetProxy(const char *server);
 
+// Set the proxy server for a specific request
+////////////////////////
 GHTTPBool ghiSetRequestProxy(
     GHTTPRequest request,
     const char *server
 );
 
+// Set the throttle settings.
+/////////////////////////////
 void ghiThrottleSettings(
     int bufferSize,
     gsi_time timeDelay

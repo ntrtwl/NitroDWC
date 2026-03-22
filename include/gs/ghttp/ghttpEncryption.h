@@ -1,32 +1,42 @@
 #ifndef __GHTTPENCRYPTION_H__
 #define __GHTTPENCRYPTION_H__
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+// Encryption method
 typedef enum {
     GHIEncryptionMethod_None,
-    GHIEncryptionMethod_Encrypt,
-    GHIEncryptionMethod_Decrypt
+    GHIEncryptionMethod_Encrypt,  // encrypt raw data written to buffer
+    GHIEncryptionMethod_Decrypt   // decrypt raw data written to buffer
 } GHIEncryptionMethod;
 
+// Encryption results
 typedef enum {
     GHIEncryptionResult_None,
-    GHIEncryptionResult_Success,
-    GHIEncryptionResult_BufferTooSmall,
-    GHIEncryptionResult_Error
+    GHIEncryptionResult_Success,        // successfully encrypted/decrypted
+    GHIEncryptionResult_BufferTooSmall, // buffer was too small to hold converted data
+    GHIEncryptionResult_Error           // some other kind of error
 } GHIEncryptionResult;
 
-struct GHIEncryptor;
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+struct GHIEncryptor; // forward declare for callbacks
 struct GHIConnection;
 
+// Called to init the encryption engine
 typedef GHIEncryptionResult (*GHTTPEncryptorInitFunc) (
     struct GHIConnection *theConnection,
     struct GHIEncryptor *theEncryptor
 );
 
+// Called to connect the socket (some engines do this internally)
 typedef GHIEncryptionResult (*GHTTPEncryptorCleanupFunc)(
     struct GHIConnection *theConnection,
     struct GHIEncryptor *theEncryptor
 );
 
+// Called to start the handshake process engine
 typedef GHIEncryptionResult (*GHTTPEncryptorEncryptFunc)(
     struct GHIConnection *theConnection,
     struct GHIEncryptor *theEncryptor,
@@ -36,6 +46,7 @@ typedef GHIEncryptionResult (*GHTTPEncryptorEncryptFunc)(
     int *theEncryptedLength
 );
 
+// Called to destroy the encryption engine
 typedef GHIEncryptionResult (*GHTTPEncryptorDecryptFunc)(
     struct GHIConnection *theConnection,
     struct GHIEncryptor *theEncryptor,
@@ -45,11 +56,13 @@ typedef GHIEncryptionResult (*GHTTPEncryptorDecryptFunc)(
     int *theDecryptedLength
 );
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 typedef struct GHIEncryptor {
-    void *mInterface;
+    void *mInterface;   // only SSL is currently supported
     GHTTPEncryptionEngine mEngine;
     GHTTPBool mInitialized;
-    GHTTPBool mSessionEstablished;
+    GHTTPBool mSessionEstablished;  // handshake completed?
     GHTTPEncryptorInitFunc mInitFunc;
     GHTTPEncryptorCleanupFunc mCleanupFunc;
     GHTTPEncryptorEncryptFunc mEncryptFunc;
@@ -57,6 +70,9 @@ typedef struct GHIEncryptor {
 } GHIEncryptor;
 
 #ifdef MATRIXSSL
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+// ssl encryption
     GHIEncryptionResult ghttpEncryptorSslInitFunc(
         struct GHIConnection *connection,
         struct GHIEncryptor *theEncryptor
