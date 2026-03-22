@@ -10,6 +10,7 @@ void gti2BufferWriteByte(GTI2Buffer *buffer, GT2Byte b);
 void gti2BufferWriteUShort(GTI2Buffer *buffer, unsigned short s);
 void gti2BufferWriteData(GTI2Buffer *buffer, const GT2Byte *data, int len);
 
+// shortens the buffer by "shortenBy" (length, not size)
 void gti2BufferShorten(GTI2Buffer *buffer, int start, int shortenBy);
 
 #endif

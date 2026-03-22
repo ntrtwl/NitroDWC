@@ -3,6 +3,10 @@
 
 #include "gt2Main.h"
 
+/*********************
+** SOCKET CALLBACKS **
+*********************/
+
 GT2Bool gti2SocketErrorCallback(GT2Socket socket);
 
 GT2Bool gti2ConnectAttemptCallback(
@@ -14,6 +18,10 @@ GT2Bool gti2ConnectAttemptCallback(
     GT2Byte *message,
     int len
 );
+
+/*************************
+** CONNECTION CALLBACKS **
+*************************/
 
 GT2Bool gti2ConnectedCallback(
     GT2Connection connection,
@@ -39,6 +47,10 @@ GT2Bool gti2PingCallback(
     int latency
 );
 
+/*********************
+** FILTER CALLBACKS **
+*********************/
+
 GT2Bool gti2SendFilterCallback(
     GT2Connection connection,
     int filterID,
@@ -55,6 +67,10 @@ GT2Bool gti2ReceiveFilterCallback(
     GT2Bool reliable
 );
 
+/*******************
+** DUMP CALLBACKS **
+*******************/
+
 GT2Bool gti2DumpCallback(
     GT2Socket socket,
     GT2Connection connection,
@@ -65,6 +81,10 @@ GT2Bool gti2DumpCallback(
     int len,
     GT2Bool send
 );
+
+/*****************************
+** SOCKET SHARING CALLBACKS **
+*****************************/
 
 GT2Bool gti2UnrecognizedMessageCallback(
     GT2Socket socket,
