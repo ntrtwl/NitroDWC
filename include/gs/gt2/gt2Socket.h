@@ -33,6 +33,8 @@ GT2Connection gti2SocketFindConnection(
     unsigned short port
 );
 
+// ip is network byte order, port is host byte order
+// returns false if there was a fatal error
 GT2Bool gti2SocketSend(
     GT2Socket socket,
     unsigned int ip,
