@@ -1,6 +1,8 @@
 #ifndef _GPI_H_
 #define _GPI_H_
 
+//INCLUDES
+//////////
 #include <stdio.h>
 #include <nonport.h>
 #include <hashtable.h>
@@ -13,6 +15,10 @@
 
 #define DEBUG_CRAZY
 
+//TYPES
+///////
+// Boolean.
+///////////
 typedef enum _GPIBool {
     GPIFalse,
     GPITrue
@@ -31,7 +37,10 @@ typedef enum _GPIBool {
 #include "gpiTransfer.h"
 #include "gpiUnique.h"
 
-typedef struct {
+// Connection data.
+///////////////////
+typedef struct
+{
     char errorString[GP_ERROR_STRING_LEN];
     GPIBool infoCaching;
     GPIBool infoCachingBuddyOnly;
@@ -85,6 +94,8 @@ typedef struct {
 #endif
 } GPIConnection;
 
+//FUNCTIONS
+///////////
 GPResult gpiInitialize(GPConnection * connection, int productID, int namespaceID);
 
 void gpiDestroy(GPConnection * connection);

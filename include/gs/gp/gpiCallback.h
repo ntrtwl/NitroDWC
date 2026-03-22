@@ -1,8 +1,14 @@
 #ifndef _GPICALLBACK_H_
 #define _GPICALLBACK_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//DEFINES
+/////////
+// Unsolicited Callbacks.
+/////////////////////////
 #define GPI_ERROR                      0
 #define GPI_RECV_BUDDY_REQUEST         1
 #define GPI_RECV_BUDDY_STATUS          2
@@ -11,6 +17,8 @@
 #define GPI_TRANSFER_CALLBACK          5
 #define GPI_NUM_CALLBACKS              6
 
+// Add type - not 0 only for a few.
+///////////////////////////////////
 #define GPI_ADD_NORMAL                 0
 #define GPI_ADD_ERROR                  1
 #define GPI_ADD_MESSAGE                2
@@ -22,11 +30,18 @@
 #define GPI_ADD_REVERSE_BUDDIES        8
 #define GPI_ADD_SUGGESTED_UNIQUE       9
 
+
+//TYPES
+///////
+// A Callback.
+//////////////
 typedef struct {
     GPCallback callback;
     void *param;
 } GPICallback;
 
+// Data for a pending callback.
+///////////////////////////////
 typedef struct GPICallbackData {
     GPICallback callback;
     void *arg;
@@ -35,6 +50,8 @@ typedef struct GPICallbackData {
     struct GPICallbackData *pnext;
 } GPICallbackData;
 
+//FUNCTIONS
+///////////
 void gpiCallErrorCallback(
     GPConnection *connection,
     GPResult result,

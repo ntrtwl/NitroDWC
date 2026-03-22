@@ -1,8 +1,12 @@
 #ifndef _GPITRANSFER_H_
 #define _GPITRANSFER_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//DEFINES
+/////////
 #define GPI_FILE_DIRECTORY     (1 << 1)
 #define GPI_FILE_SKIP          (1 << 2)
 #define GPI_FILE_FAILED        (1 << 3)
@@ -17,6 +21,8 @@
 #define GPI_SKIP_WRITE_ERROR   1
 #define GPI_SKIP_USER_SKIP     2
 
+//TYPES
+///////
 typedef enum {
     GPITransferPinging,
     GPITransferWaiting,
@@ -54,7 +60,7 @@ typedef struct {
     char *path;
     char *name;
 #ifdef GSI_UNICODE
-    unsigned short *name_W;
+    unsigned short *name_W; // must have this since developers are given pointers to internal memory
     unsigned short *path_W;
 #endif
     int progress;
@@ -67,6 +73,8 @@ typedef struct {
     int reason;
 } GPIFile;
 
+//FUNCTIONS
+///////////
 #ifndef NOFILE
     GPResult gpiInitTransfers(GPConnection *connection);
     void gpiCleanupTransfers(GPConnection *connection);

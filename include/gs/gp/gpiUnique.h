@@ -1,8 +1,12 @@
 #ifndef _GPIUNIQUE_H_
 #define _GPIUNIQUE_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//FUNCTIONS
+///////////
 GPResult gpiRegisterUniqueNick(
     GPConnection *connection,
     const char uniquenick[GP_UNIQUENICK_LEN],

@@ -1,8 +1,14 @@
 #ifndef _GPIBUFFER_H_
 #define _GPIBUFFER_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//TYPES
+///////
+// A buffer.
+////////////
 typedef struct {
     char *buffer;
     int size;
@@ -12,6 +18,8 @@ typedef struct {
 
 typedef struct GPIPeer_s *GPIPeer_st;
 
+//FUNCTIONS
+///////////
 GPResult gpiAppendCharToBuffer(
     GPConnection *connection,
     GPIBuffer *outputBuffer,

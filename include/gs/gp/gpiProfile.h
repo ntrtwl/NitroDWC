@@ -1,10 +1,18 @@
 #ifndef _GPIPROFILE_H_
 #define _GPIPROFILE_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//DEFINES
+/////////
 #define GPI_SIG_LEN      33
 
+//TYPES
+///////
+// The status for a buddy profile.
+//////////////////////////////////
 typedef struct {
     int buddyIndex;
     GPEnum status;
@@ -14,6 +22,8 @@ typedef struct {
     int port;
 } GPIBuddyStatus;
 
+// Profile data.
+////////////////
 typedef struct GPIProfile {
     int profileId;
     int userId;
@@ -24,12 +34,16 @@ typedef struct GPIProfile {
     char *peerSig;
 } GPIProfile;
 
+// A list of profiles.
+//////////////////////
 typedef struct {
     HashTable profileTable;
     int num;
     int numBuddies;
 } GPIProfileList;
 
+//FUNCTIONS
+///////////
 GPIBool gpiInitProfiles(GPConnection *connection);
 
 GPIProfile *gpiProfileListAdd(
@@ -79,6 +93,7 @@ GPResult gpiFindProfileByUser(
     GPIProfile **profile
 );
 
+// return false to stop the mapping
 typedef GPIBool (*gpiProfileMapFunc)(
     GPConnection *connection,
     GPIProfile *profile,

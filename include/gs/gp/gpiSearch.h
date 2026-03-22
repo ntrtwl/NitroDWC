@@ -1,8 +1,12 @@
 #ifndef _GPISEARCH_H_
 #define _GPISEARCH_H_
 
+//INCLUDES
+//////////
 #include "gpi.h"
 
+//TYPES
+///////
 #define GPI_SEARCH_PROFILE         1
 #define GPI_SEARCH_IS_VALID        2
 #define GPI_SEARCH_NICKS           3
@@ -12,6 +16,8 @@
 #define GPI_SEARCH_OTHERS_BUDDY    7
 #define GPI_SEARCH_SUGGEST_UNIQUE  8
 
+// Profile Search operation data.
+/////////////////////////////////
 typedef struct {
     int type;
     SOCKET sock;
@@ -31,6 +37,8 @@ typedef struct {
     GPIBool remove;
 } GPISearchData;
 
+//FUNCTIONS
+///////////
 GPResult gpiProfileSearch(
     GPConnection *connection,
     const char nick[GP_NICK_LEN],
