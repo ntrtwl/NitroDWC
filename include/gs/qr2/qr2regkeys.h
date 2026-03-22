@@ -50,8 +50,12 @@ extern const char *qr2_registered_key_list[];
 
 void qr2_register_key(int keyid, const gsi_char *key);
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+// Necessary for unicode support.  Must store a copy of the UTF8 keys
+// generated from qr2_register_keyW
 void qr2_internal_key_list_append(char *theKey);
-void qr2_internal_key_list_free(void);
+void qr2_internal_key_list_free(void); // call this at qr2 shutdown
 
 #ifdef __cplusplus
 }

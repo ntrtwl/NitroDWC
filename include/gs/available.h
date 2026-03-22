@@ -1,6 +1,7 @@
 #ifndef _AVAILABLE_H_
 #define _AVAILABLE_H_
 
+#include <nonport.h>
 #include "stringutil.h"
 
 #ifdef __cplusplus
