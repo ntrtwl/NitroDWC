@@ -1,5 +1,6 @@
 #include <nitro.h>
 
+#include <bm/dwc_backup.h>
 #include <bm/dwc_bm_init.h>
 #include <bm/util_wifiidtool.h>
 #include <base/dwc_report.h>
@@ -11,7 +12,6 @@
 static char id_string [] = SDK_MIDDLEWARE_STRING("NINTENDO", DWC_VERSION_STRING);
 #include <nitro/version_end.h>
 
-extern BOOL DWCi_AUTH_MakeWiFiID(void * work);
 int DWC_Init (void * work)
 {
     int ret;
@@ -51,11 +51,7 @@ u64 DWC_GetAuthenticatedUserId (void)
     return wifiid.uId;
 }
 
-extern BOOL DWCi_BACKUPlInit(void * work);
-extern BOOL DWCi_BACKUPlRead(void * mem);
-extern BOOL DWCi_BACKUPlWritePage(const void * data, const BOOL * page, void * work);
-
-static char s_work[0x400] ATTRIBUTE_ALIGN(32);
+static char s_work[sizeof(DWCMemMap)] ATTRIBUTE_ALIGN(32);
 
 void DWC_Debug_DWCInitError (void * work, int dwc_init_error)
 {
@@ -67,14 +63,14 @@ void DWC_Debug_DWCInitError (void * work, int dwc_init_error)
     DWCi_BACKUPlInit(work);
 
     if (dwc_init_error == DWC_INIT_RESULT_CREATE_USERID) {
-        DWCi_BACKUPlRead(s_work);
+        DWCi_BACKUPlRead((DWCMemMap *)s_work);
         MI_CpuClear8(&s_work[0xf0], 10);
 
         s_work[0xf0 + 0x0a] &= ~0x3f;
         needCrc = TRUE;
         crcPage = 0;
     } else if (dwc_init_error == DWC_INIT_RESULT_DESTROY_USERID) {
-        DWCi_BACKUPlRead(s_work);
+        DWCi_BACKUPlRead((DWCMemMap *)s_work);
         MI_CpuClear8(&s_work[0x100 + 0xf0], 10);
 
         s_work[0x100 + 0xf0 + 0x0a] &= ~0x3f;
@@ -95,7 +91,7 @@ void DWC_Debug_DWCInitError (void * work, int dwc_init_error)
         *(u16 *)(&s_work[crcPage * 0x100 + 0xFE]) = hash;
 
         page[crcPage] = TRUE;
-        DWCi_BACKUPlWritePage(s_work, page, work);
+        DWCi_BACKUPlWritePage((DWCMemMap *)s_work, page, work);
     }
 
     if (dwc_init_error == DWC_INIT_RESULT_DESTROY_USERID ||
@@ -103,6 +99,6 @@ void DWC_Debug_DWCInitError (void * work, int dwc_init_error)
         BOOL page[4] = { TRUE, FALSE, FALSE, FALSE };
 
         MI_CpuClear8(s_work, sizeof(s_work));
-        DWCi_BACKUPlWritePage(s_work, page, work);
+        DWCi_BACKUPlWritePage((DWCMemMap *)s_work, page, work);
     }
 }

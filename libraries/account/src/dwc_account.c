@@ -272,7 +272,7 @@ void DWCi_Acc_CreateTempLoginId (DWCAccLoginId * loginid)
     MATH_InitRand32(&randcontext, buffer[7]);
     DWC_Auth_GetId(&authid);
 
-    if (authid.flg) {
+    if (authid.flag) {
         DWCi_Acc_SetUserId(loginid, authid.uId);
     } else {
         DWCi_Acc_SetUserId(loginid, authid.notAttestedId);
@@ -288,7 +288,7 @@ BOOL DWCi_Acc_CheckConsoleUserId (const DWCAccLoginId * loginid)
 
     DWC_Auth_GetId(&authid);
     
-    if (authid.flg) {
+    if (authid.flag) {
         return (DWCi_Acc_GetUserId(loginid) == authid.uId) ? TRUE : FALSE;
     } else {
         return (DWCi_Acc_GetUserId(loginid) == authid.notAttestedId) ? TRUE : FALSE;
@@ -352,7 +352,7 @@ BOOL DWC_CheckValidConsole (const DWCAccUserData * userdata)
 
     DWC_Auth_GetId(&authid);
 
-    if (!authid.flg) {
+    if (!authid.flag) {
         return FALSE;
     }
 
