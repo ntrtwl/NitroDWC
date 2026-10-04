@@ -1,6 +1,7 @@
 #ifndef DWC_AC_H_
 #define DWC_AC_H_
 
+#include <nitro.h>
 #include <nitro/types.h>
 
 #ifdef __cplusplus
@@ -32,55 +33,56 @@ enum {
     DWC_AC_AP_TYPE_NINTENDOWFC,
     DWC_AC_AP_TYPE_NINTENDOSPOT,
     DWC_AC_AP_TYPE_UNKNOWN = 99,
-    DWC_AC_AP_TYPE_FALSE = 0xff
+    DWC_AC_AP_TYPE_FALSE = 0xFF
 };
 
-#define DWC_WDS_SSID_BUF_SIZE      32
-#define DWC_WDS_WEPKEY_BUF_SIZE    32
+#define DWC_WDS_WEPKEY_BUF_SIZE 32
+
+#define AP_ID_LENGTH 10
 
 typedef enum {
-    DWC_WDS_STATE_IDLE         = 0,
-    DWC_WDS_STATE_PROCESS      = 1,
-    DWC_WDS_STATE_COMPLETED    = 2,
-    DWC_WDS_STATE_FAILED       = 3,
-    DWC_WDS_STATE_ERROR        = 4
+    DWC_WDS_STATE_IDLE = 0,
+    DWC_WDS_STATE_PROCESS = 1,
+    DWC_WDS_STATE_COMPLETED = 2,
+    DWC_WDS_STATE_FAILED = 3,
+    DWC_WDS_STATE_ERROR = 4
 } DWCWDSState;
 
-typedef struct tagDWCACOption {
+typedef struct DWCACOption {
     u8 connectType;
     u8 skipNetCheck;
 } DWCACOption;
 
-typedef struct tagDWCACConfig {
-    void * (*alloc)(u32 name, s32 size);
-    void (*free)(u32 name, void * ptr, s32 size);
+typedef struct DWCACConfig {
+    void *(*alloc)(u32 name, s32 size);
+    void (*free)(u32 name, void *ptr, s32 size);
     u8 dmaNo;
     u8 powerMode;
     DWCACOption option;
 } DWCACConfig;
 
-typedef struct tagDWCWDSData {
-    u8 ssid[DWC_WDS_SSID_BUF_SIZE];
+typedef struct DWCWDSData {
+    u8 ssid[WM_SIZE_SSID];
     u8 wep[DWC_WDS_WEPKEY_BUF_SIZE];
     int wepMode;
-    char apnum[10];
+    char apnum[AP_ID_LENGTH];
 } DWCWDSData;
 
-BOOL DWC_AC_Create(DWCACConfig * config);
+BOOL DWC_AC_Create(DWCACConfig *config);
 
 int DWC_AC_Process(void);
 int DWC_AC_GetStatus(void);
 
 u8 DWC_AC_GetApType(void);
 
-BOOL DWC_AC_GetApSpotInfo(u8 * apSpotInfo);
+BOOL DWC_AC_GetApSpotInfo(u8 *apSpotInfo);
 BOOL DWC_AC_Destroy(void);
 
-void DWC_AC_SetSpecifyAp(const void * ssid, const void * wep, int wepMode);
-void DWC_AC_SetSpecifyApEx(const void * ssid, const void * wep, int wepMode, const char * apSpotInfo, int overrideType);
+void DWC_AC_SetSpecifyAp(const void *ssid, const void *wep, int wepMode);
+void DWC_AC_SetSpecifyApEx(const void *ssid, const void *wep, int wepMode, const char *apSpotInfo, int overrideType);
 
-BOOL DWC_AC_CheckWiFiStation(const void * ssid, u16 len);
-BOOL DWC_AC_StartupGetWDSInfo(DWCWDSData * nspotInfo);
+BOOL DWC_AC_CheckWiFiStation(const void *ssid, u16 len);
+BOOL DWC_AC_StartupGetWDSInfo(DWCWDSData *nspotInfo);
 
 DWCWDSState DWC_AC_ProcessGetWDSInfo(void);
 

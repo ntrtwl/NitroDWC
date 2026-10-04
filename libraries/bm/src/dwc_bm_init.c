@@ -126,7 +126,7 @@ static BOOL checkAp(const DWCBMApInfo *info)
         return FALSE;
     }
 
-    if (!DWC_BACKUPlCheckSsid(info->ssid[0])) {
+    if (!DWC_BACKUPlCheckSsid(info->ssid[SSID_NORMAL])) {
         return FALSE;
     }
 
