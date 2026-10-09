@@ -3,10 +3,16 @@
 
 #include <nitro.h>
 
+enum SSID {
+    SSID_NORMAL = 0,
+    SSID_AOSS,
+    SSID_COUNT,
+};
+
 typedef struct DWCBMApInfo {
     u8 ispId[32];
     u8 ispPass[32];
-    u8 ssid[2][32];
+    u8 ssid[SSID_COUNT][32];
     u8 wep[4][16];
     u8 ip[4];
     u8 gateway[4];

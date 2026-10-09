@@ -1,0 +1,23 @@
+#ifndef DWC_AC_ERROR_H
+#define DWC_AC_ERROR_H
+
+#include <nitro.h>
+
+#define DWC_AC_ECODE_DISCONNECTED  -50000
+#define DWC_AC_ECODE_AP_NOT_FOUND  -50099
+#define DWC_AC_ECODE_SSID_MISMATCH -51099
+#define DWC_AC_ECODE_WEP_FAILURE   -51100
+#define DWC_AC_ECODE_OVER_CAPACITY -51200
+#define DWC_AC_ECODE_NOT_CONNECTED -51300
+#define DWC_AC_ECODE_DHCP          -52000
+#define DWC_AC_ECODE_NETCHECK_DNS  -52100
+#define DWC_AC_ECODE_NETCHECK_1    -52200
+#define DWC_AC_ECODE_NETCHECK_2    -52300
+#define DWC_AC_ECODE_AUTH_1        -53000
+#define DWC_AC_ECODE_AUTH_2        -53100
+#define DWC_AC_ECODE_AUTH_3        -53200
+
+u8 DWCi_AC_Error(void);
+int DWCi_AC_GetResult(void);
+
+#endif // DWC_AC_ERROR_H

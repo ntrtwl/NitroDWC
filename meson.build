@@ -87,6 +87,7 @@ nitrodwc_includes = include_directories(
 nitrosdk_dep    = dependency('NitroSDK')
 nitrosystem_dep = dependency('NitroSystem')
 nitrowifi_dep   = dependency('NitroWiFi')
+nitrocrypto_dep = dependency('NitroCrypto')
 
 ############################################################
 ###                      LIBRARIES                       ###
