@@ -1,19 +1,21 @@
 #ifndef DWC_HTTP_H_
 #define DWC_HTTP_H_
 
+#include <nitro.h>
 #include <nitroWiFi.h>
-#include <nitroWiFi/version.h>
 
 #include "util_alloc.h"
-#include "util_base64.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define DWCHTTP_MAXURL            256
-#define DWCHTTP_STACKSIZE         4096
-#define DWCHTTP_MAX_LABELVALUE    32
+#define DWCHTTP_MAXURL         256
+#define DWCHTTP_STACKSIZE      4096
+#define DWCHTTP_MAX_LABELVALUE 32
+
+#define DWC_NETCHECK_BL_URL "http://conntest.nintendowifi.net/"
+#define DWC_AUTH_NAS_URL    "https://nas.nintendowifi.net/ac"
 
 typedef enum {
     DWCHTTP_E_NOERR,
@@ -33,49 +35,49 @@ typedef enum {
     DWCHTTP_GET
 } DWCHttpAction;
 
-typedef struct {
-    char * buffer;
-    char * write_index;
-    char * buffer_tail;
-    unsigned long length;
+typedef struct DWCHttpBuffer {
+    char *buffer;
+    char *write_index;
+    char *buffer_tail;
+    u32 length;
 } DWCHttpBuffer;
 
-typedef struct {
-    char * label;
-    char * value;
+typedef struct DWCHttpLabelValue {
+    char *label;
+    char *value;
 } DWCHttpLabelValue;
 
-typedef struct {
-    DWCHttpLabelValue * entry;
+typedef struct DWCHttpParseResult {
+    DWCHttpLabelValue *entry;
     int len;
     int index;
 } DWCHttpParseResult;
 
-typedef struct {
-    const char * url;
+typedef struct DWCHttpParam {
+    const char *url;
     DWCHttpAction action;
-    unsigned long len_recvbuf;
+    u32 len_recvbuf;
     DWCAuthAlloc alloc;
     DWCAuthFree free;
     BOOL ignoreca;
     int timeout;
 } DWCHttpParam;
 
-typedef struct {
-    unsigned char stack[DWCHTTP_STACKSIZE];
+typedef struct DWCHttp {
+    u8 stack[DWCHTTP_STACKSIZE];
     u8 initflag;
     DWCHttpParam param;
     DWCHttpError error;
     char url[DWCHTTP_MAXURL];
-    char * hostname;
-    char * filepath;
+    char *hostname;
+    char *filepath;
     u32 hostip;
     BOOL ssl_enabled;
-    unsigned short port;
+    u16 port;
     CPSSoc soc;
     CPSSslConnection con;
-    unsigned char * lowrecvbuf;
-    unsigned char * lowsendbuf;
+    u8 *lowrecvbuf;
+    u8 *lowsendbuf;
     u32 lowentropydata[OS_LOW_ENTROPY_DATA_SIZE / sizeof(u32)];
     int num_postitem;
     DWCHttpBuffer req;
@@ -89,28 +91,24 @@ typedef struct {
     BOOL abort;
 } DWCHttp;
 
-DWCHttpError DWC_Http_Create(DWCHttp * http, DWCHttpParam * param);
+DWCHttpError DWC_Http_Create(DWCHttp *http, DWCHttpParam *param);
 
-void DWC_Http_Destroy(DWCHttp * http);
-void DWC_Http_StartThread(DWCHttp * http, u32 prio);
-void DWC_Http_Abort(DWCHttp * http);
+void DWC_Http_Destroy(DWCHttp *http);
+void DWC_Http_StartThread(DWCHttp *http, u32 prio);
+void DWC_Http_Abort(DWCHttp *http);
 
-int DWC_Http_GetRecvProgress(DWCHttp * http);
+int DWC_Http_GetRecvProgress(DWCHttp *http);
 
-DWCHttpError DWC_Http_Add_HeaderItem(DWCHttp * http, char * label, char * data);
-DWCHttpError DWC_Http_Add_PostBase64Item(DWCHttp * http, const char * label, const char * data, unsigned long data_len);
-DWCHttpError DWC_Http_Add_Body(DWCHttp * http, const char * data);
-DWCHttpError DWC_Http_FinishHeader(DWCHttp * http);
+DWCHttpError DWC_Http_Add_HeaderItem(DWCHttp *http, char *label, char *data);
+DWCHttpError DWC_Http_Add_PostBase64Item(DWCHttp *http, const char *label, const char *data, u32 data_len);
+DWCHttpError DWC_Http_Add_Body(DWCHttp *http, const char *data);
+DWCHttpError DWC_Http_FinishHeader(DWCHttp *http);
 
-BOOL DWC_Http_ParseResult(DWCHttp * http, BOOL noparsebody);
+BOOL DWC_Http_ParseResult(DWCHttp *http, BOOL noparsebody);
 
-#ifdef DWC_HTTP_SETSSLPRIO
-    void DWC_Http_SetSSLPrio(u32 prio);
-#endif
-
-char * DWC_Http_GetResult(DWCHttp * http, char * label);
-int DWC_Http_GetBase64DecodedResult(DWCHttp * http, char * label, char * buffer, unsigned long buffer_len);
-BOOL DWC_Http_GetRawResult(DWCHttp * http, char * label, char * buffer, int buffer_len);
+char *DWC_Http_GetResult(DWCHttp *http, char *label);
+int DWC_Http_GetBase64DecodedResult(DWCHttp *http, char *label, char *buffer, u32 buffer_len);
+BOOL DWC_Http_GetRawResult(DWCHttp *http, char *label, char *buffer, int buffer_len);
 
 #ifdef __cplusplus
 }

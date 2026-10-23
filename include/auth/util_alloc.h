@@ -7,8 +7,8 @@
 extern "C" {
 #endif
 
-typedef void *(*DWCAuthAlloc)(unsigned long name, long size);
-typedef void (*DWCAuthFree)(unsigned long name, void * ptr, long size);
+typedef void *(*DWCAuthAlloc)(u32 name, s32 size);
+typedef void (*DWCAuthFree)(u32 name, void *ptr, s32 size);
 
 #ifdef __cplusplus
 }

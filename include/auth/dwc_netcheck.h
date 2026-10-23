@@ -1,7 +1,10 @@
 #ifndef DWC_NETCHECK_H_
 #define DWC_NETCHECK_H_
 
+#include <nitro.h>
+
 #include "dwc_auth.h"
+#include "util_alloc.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,10 +26,10 @@ typedef enum {
     DWCNETCHECK_E_MAX
 } DWCNetcheckError;
 
-typedef struct {
+typedef struct DWCNetcheckParam {
     DWCAuthAlloc alloc;
     DWCAuthFree free;
-    void * bmworkarea;
+    void *bmworkarea;
 } DWCNetcheckParam;
 
 typedef enum {
@@ -37,7 +40,7 @@ typedef enum {
     DWC_SIMPLENETCHECK_NOTINITIALIZED
 } DWCSimpleNetcheckResult;
 
-DWCNetcheckError DWC_Netcheck_Create(DWCNetcheckParam * param);
+DWCNetcheckError DWC_Netcheck_Create(DWCNetcheckParam *param);
 
 void DWC_Netcheck_Destroy(void);
 void DWC_Netcheck_Abort(void);
@@ -46,7 +49,7 @@ void DWC_Netcheck_Join(void);
 DWCNetcheckError DWC_Netcheck_GetError(void);
 
 int DWC_Netcheck_GetReturnCode(void);
-void DWC_Netcheck_SetCustomBlacklist(const char * url);
+void DWC_Netcheck_SetCustomBlacklist(const char *url);
 void DWC_Netcheck_SetAllow302(BOOL allow302);
 
 BOOL DWC_SimpleNetcheckAsync(int timeout);

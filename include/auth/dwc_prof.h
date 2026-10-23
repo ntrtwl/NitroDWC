@@ -18,11 +18,11 @@ typedef enum {
 
 typedef enum {
     DWC_PROF_REGION_SELF = 0x00,
-    DWC_PROF_REGION_ALL = 0xff
+    DWC_PROF_REGION_ALL = 0xFF
 } DWCProfRegion;
 
-BOOL DWC_CheckProfanityAsync(const u16 ** words, int wordsnum, const char * reserved, int timeout, char * result, int * badwordsnum);
-BOOL DWC_CheckProfanityExAsync(const u16 ** words, int wordsnum, const char * reserved, int timeout, char * result, int * badwordsnum, DWCProfRegion region);
+BOOL DWC_CheckProfanityAsync(const u16 **words, int wordsnum, const char *reserved, int timeout, char *result, int *badwordsnum);
+BOOL DWC_CheckProfanityExAsync(const u16 **words, int wordsnum, const char *reserved, int timeout, char *result, int *badwordsnum, DWCProfRegion region);
 
 DWCProfState DWC_CheckProfanityProcess(void);
 

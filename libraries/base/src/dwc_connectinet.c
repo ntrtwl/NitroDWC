@@ -1,5 +1,6 @@
 #include <nitro.h>
 #include <nitroWiFi/socl.h>
+#include <nitroWiFi/version.h>
 
 #include <ac/dwc_ac.h>
 #include <base/dwc_connectinet.h>

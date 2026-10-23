@@ -1,21 +1,23 @@
 #ifndef DWC_SVL_H
 #define DWC_SVL_H
 
+#include <nitro.h>
+
 #include "util_alloc.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define DWC_SVL_ERROR_BASENUM      (-24000)
-#define DWC_SVL_ERROR_HTTPBASENUM  (-25000)
+#define DWC_SVL_ERROR_BASENUM     (-24000)
+#define DWC_SVL_ERROR_HTTPBASENUM (-25000)
 
-#define DWC_SVL_ERROR_FATAL        (-100)
-#define DWC_SVL_ERROR_BADDATA      (-101)
+#define DWC_SVL_ERROR_FATAL   (-100)
+#define DWC_SVL_ERROR_BADDATA (-101)
 
-#define DWC_SVL_HOST_LENGTH          64
-#define DWC_SVL_TOKEN_LENGTH         300
-#define DWC_SVL_STATUSDATA_LENGTH    1
+#define DWC_SVL_HOST_LENGTH       64
+#define DWC_SVL_TOKEN_LENGTH      300
+#define DWC_SVL_STATUSDATA_LENGTH 1
 
 typedef enum {
     DWC_SVL_STATE_DIRTY = 0,
@@ -27,7 +29,7 @@ typedef enum {
     DWC_SVL_STATE_MAX
 } DWCSvlState;
 
-typedef struct {
+typedef struct DWCSvlResult {
     BOOL status;
     char svlhost[DWC_SVL_HOST_LENGTH + 1];
     char svltoken[DWC_SVL_TOKEN_LENGTH + 1];
@@ -35,7 +37,7 @@ typedef struct {
 
 BOOL DWC_Svl_Init(DWCAuthAlloc alloc, DWCAuthFree free);
 void DWC_Svl_Cleanup(void);
-BOOL DWC_Svl_GetTokenAsync(char * svc, DWCSvlResult * result);
+BOOL DWC_Svl_GetTokenAsync(char *svc, DWCSvlResult *result);
 DWCSvlState DWC_Svl_Process(void);
 void DWC_Svl_Abort(void);
 

@@ -17,6 +17,8 @@ typedef struct {
 
 BOOL DWCi_AUTH_GetNewWiFiInfo(DWCWiFiInfo *wifiinfo);
 BOOL DWCi_AUTH_MakeWiFiID(void *work);
+BOOL DWCi_AUTH_UpdateWiFiID(DWCWiFiInfo *wifiinfo, void *work);
+BOOL DWCi_AUTH_RemakeWiFiID(DWCWiFiInfo *wifiinfo);
 void DWC_Auth_GetId(DWCAuthWiFiId *id);
 BOOL DWC_Auth_CheckPseudoWiFiID(void);
 BOOL DWC_Auth_CheckWiFiIDNeedCreate(void);

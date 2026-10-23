@@ -80,6 +80,9 @@ void DWC_AC_SetSpecifyAp(const void * ssid, const void * wep, int wepMode);
 void DWC_AC_SetSpecifyApEx(const void * ssid, const void * wep, int wepMode, const char * apSpotInfo, int overrideType);
 
 BOOL DWC_AC_CheckWiFiStation(const void * ssid, u16 len);
+
+void DWCi_AC_GetPostalCode(const char *ssid, u8 pos[10]);
+
 BOOL DWC_AC_StartupGetWDSInfo(DWCWDSData * nspotInfo);
 
 DWCWDSState DWC_AC_ProcessGetWDSInfo(void);
