@@ -7,8 +7,8 @@
 extern "C" {
 #endif
 
-int DWC_Auth_Base64Encode(const char * src, const unsigned long srclen, char * dst, const unsigned long dstlen);
-int DWC_Auth_Base64Decode(const char * src, const unsigned long srclen, char * dst, const unsigned long dstlen);
+int DWC_Auth_Base64Encode(const char *src, u32 srclen, char *dst, u32 dstlen);
+int DWC_Auth_Base64Decode(const char *src, u32 srclen, char *dst, u32 dstlen);
 
 #ifdef __cplusplus
 }

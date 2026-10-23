@@ -1,20 +1,20 @@
 #ifndef DWC_AUTH_H_
 #define DWC_AUTH_H_
 
+#include <ac/dwc_ac.h>
 #include <nitro.h>
 
 #include "dwc_http.h"
-
-#include "ac/dwc_ac.h"
+#include "util_alloc.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define DWCAUTH_INGAMESN_LEN    (25 + 1)
-#define DWCAUTH_GSBRCDBYTES     (11 + 1)
+#define DWCAUTH_INGAMESN_LEN (25 + 1)
+#define DWCAUTH_GSBRCDBYTES  (11 + 1)
 
-typedef struct {
+typedef struct DWCAuthResult {
     int returncode;
     char retcode[3 + 1];
     char datetime[14 + 1];
@@ -51,8 +51,8 @@ typedef enum {
     DWCAUTH_E_MAX
 } DWCAuthError;
 
-typedef struct {
-    unsigned short ingamesn[DWCAUTH_INGAMESN_LEN];
+typedef struct DWCAuthParam {
+    u16 ingamesn[DWCAUTH_INGAMESN_LEN];
     char gsbrcd[DWCAUTH_GSBRCDBYTES];
     DWCAuthAlloc alloc;
     DWCAuthFree free;
@@ -66,17 +66,17 @@ typedef enum {
 
 extern DWCAuthIngamesnCheckResult DWCauthingamesncheckresult;
 
-void DWC_Auth_SetCustomNas(const char * nasaddr);
+void DWC_Auth_SetCustomNas(const char *nasaddr);
 
-DWCAuthError DWC_Auth_Create(DWCAuthParam * param, void * http);
-DWCAuthError DWC_Auth_Create_WFCUtil(DWCAuthParam * param, void * http);
+DWCAuthError DWC_Auth_Create(DWCAuthParam *param, void *http);
+DWCAuthError DWC_Auth_Create_WFCUtil(DWCAuthParam *param, void *http);
 
 void DWC_Auth_Abort(void);
 void DWC_Auth_Destroy(void);
 void DWC_Auth_Join(void);
 
 DWCAuthError DWC_Auth_GetError(void);
-void DWC_Auth_GetResult(DWCAuthResult * result);
+void DWC_Auth_GetResult(DWCAuthResult *result);
 
 #ifdef __cplusplus
 }

@@ -12,8 +12,6 @@
 
 #include <ranking/dwc_ranksession.h>
 
-#define DWC_AUTH_NAS_URL    "https://nas.nintendowifi.net/ac"
-
 typedef union {
     char data[84];
     struct {

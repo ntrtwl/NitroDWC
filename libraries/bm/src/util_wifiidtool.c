@@ -125,7 +125,7 @@ BOOL DWCi_AUTH_MakeWiFiID(void *work)
     return DWCi_BM_SetWiFiInfo(&wifiinfo, work) != FALSE;
 }
 
-BOOL DWCi_AUTH_UpDateWiFiID(DWCWiFiInfo *wifiinfo, void *work)
+BOOL DWCi_AUTH_UpdateWiFiID(DWCWiFiInfo *wifiinfo, void *work)
 {
     DWCWiFiInfo wifiinfotemp;
     DWCi_BM_GetWiFiInfo(&wifiinfotemp);

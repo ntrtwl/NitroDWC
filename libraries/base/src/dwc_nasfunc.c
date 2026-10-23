@@ -1,5 +1,6 @@
 #include <nitro.h>
 
+#include <auth/dwc_auth.h>
 #include <dwc_report.h>
 #include <dwc_error.h>
 #include <dwc_nasfunc.h>
@@ -11,16 +12,15 @@ typedef struct {
     DWCAuthResult result;
 } DWCNalCnt;
 
-extern s64 DWCnastimediff;
-extern BOOL DWCnastimediffvalid;
-
 static DWCNalCnt * nalcnt = NULL;
 
 DWCIngamesnCheckResult DWC_GetIngamesnCheckResult (void)
 {
-    return (DWCIngamesnCheckResult)DWCauthingamesncheckresult;
+    return DWCauthingamesncheckresult;
 }
 
+extern s64 DWCnastimediff;
+extern BOOL DWCnastimediffvalid;
 extern s64 DWCnastimediffbase;
 
 BOOL DWC_GetDateTime (RTCDate * date, RTCTime * time)
